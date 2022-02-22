@@ -26,6 +26,7 @@ func change_player_state(value):
 	label.text = value
 
 
+# test values
 func _process(_delta):
 	# print(states[0])
 

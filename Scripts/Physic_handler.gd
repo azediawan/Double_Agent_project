@@ -15,7 +15,7 @@ const slope_slide_threshold := 45.0
 func _physics_process(_delta):
 	var snap_vector = Vector2(0, 45) if snap else Vector2()
 	GlobalVariables.move_and_slide = main_node.move_and_slide_with_snap(keyboard_input, snap_vector, gravity_dir, slope_slide_threshold)
-	print(keyboard_input.x)
+	# print(keyboard_input.x)
 	keyboard_input.x = lerp(keyboard_input.x, 0, 0.16)
 	snapping_fixer()
 	apply_gravity()
@@ -28,7 +28,7 @@ func keyboard_inputs():
 
 
 func lerp_animation():
-	print(keyboard_input.x)
+	# print(keyboard_input.x)
 
 	if GlobalVariables.keyboard_vector == 1:
 		yield(get_tree().create_timer(0.02), "timeout")

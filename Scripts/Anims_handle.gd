@@ -5,6 +5,8 @@ onready var foot = get_parent().get_node("foot_raycast")
 onready var state_machine = get_parent().get_node("StateM_handler")
 onready var void_space = get_parent().get_node("landing_space")
 onready var main_node = get_parent().get_node(".")
+onready var left_foot = get_parent().get_node("left_foot")
+onready var right_foot = get_parent().get_node("right_foot")
 
 var is_jumping = false
 var is_falling = false
@@ -16,6 +18,7 @@ var is_crouched = false
 
 func _process(_delta):
 	$AnimationPlayer.playback_speed = 1
+	angle_rotation()
 
 
 func play_animation(animation):
@@ -26,11 +29,35 @@ func play_animation(animation):
 
 func anim_dir():
 	if Input.is_action_pressed("ui_left"):
-		playerSprite.flip_h = true
+		playerSprite.scale.x = 1
 		collisionArea.scale.x *= -1
 	if Input.is_action_pressed("ui_right"):
-		playerSprite.flip_h = false
+		playerSprite.scale.x = -1
 		collisionArea.scale.x *= -1
+
+
+func angle_rotation():
+	# var wich_foot = true if left_foot.is_colliding() else false
+	var left_is_colliding = left_foot.is_colliding()
+	var right_is_colliding = right_foot.is_colliding()
+
+	if foot.is_colliding() and left_is_colliding and right_is_colliding:
+		playerSprite.rotation_degrees = 0
+		collisionArea.rotation_degrees = 0
+		# return true
+
+	elif is_jumping and !foot.is_colliding():
+		playerSprite.rotation_degrees = 10 * playerSprite.scale.x
+		collisionArea.rotation_degrees = 10 * playerSprite.scale.x
+
+	elif !is_jumping and !is_landing and !is_falling:
+		if left_is_colliding and !right_is_colliding:
+			playerSprite.rotation_degrees = 15
+			collisionArea.rotation_degrees = 15
+
+		elif right_is_colliding and !left_is_colliding:
+			playerSprite.rotation_degrees = -15
+			collisionArea.rotation_degrees = -15
 
 
 func idle_animation():

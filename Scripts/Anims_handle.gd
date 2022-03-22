@@ -45,10 +45,20 @@ func angle_rotation():
 		playerSprite.rotation_degrees = 0
 		collisionArea.rotation_degrees = 0
 		# return true
+	if !foot.is_colliding():
+		var jumping_action = true if is_jumping and !is_falling else false
+		var falling_action = true if is_falling and !is_jumping else false
+		var angle_value = 10 if jumping_action else -10
+		if falling_action or jumping_action:
+			playerSprite.rotation_degrees = angle_value * playerSprite.scale.x
+			collisionArea.rotation_degrees = angle_value * playerSprite.scale.x
 
-	elif is_jumping and !foot.is_colliding():
-		playerSprite.rotation_degrees = 10 * playerSprite.scale.x
-		collisionArea.rotation_degrees = 10 * playerSprite.scale.x
+	# elif is_jumping and !is_falling and !foot.is_colliding():
+	# 	playerSprite.rotation_degrees = 10 * playerSprite.scale.x
+	# 	collisionArea.rotation_degrees = 10 * playerSprite.scale.x
+	# elif is_falling and !is_jumping and !foot.is_colliding():
+	# 	playerSprite.rotation_degrees = -10 * playerSprite.scale.x
+	# 	collisionArea.rotation_degrees = -10 * playerSprite.scale.x
 
 	elif !is_jumping and !is_landing and !is_falling:
 		if left_is_colliding and !right_is_colliding:

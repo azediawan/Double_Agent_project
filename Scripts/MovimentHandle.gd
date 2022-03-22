@@ -6,9 +6,11 @@ onready var state_machine = get_parent().get_node("StateM_handler")
 onready var void_space = get_parent().get_node("landing_space")
 onready var physic_handler = get_parent().get_node("Physic_handler")
 
+
 func _physics_process(_delta):
 	state_machine.change_player_state("idle")
 	keyboard_actions()
+
 
 func keyboard_actions():
 	movement()
@@ -16,6 +18,7 @@ func keyboard_actions():
 	crouched()
 	falling_or_landing()
 	climb()
+
 
 func crouched():
 	if Input.is_action_pressed("ui_down") and main_node.is_on_floor():
@@ -37,6 +40,7 @@ func falling_or_landing():
 		state_value = "landing" if void_space.is_colliding() else "fall"
 		state_machine.change_player_state(state_value)
 
+
 func movement():
 	var correct_anim = "walk" if GlobalVariables.move_and_slide.x != 0 else "idle"
 	var is_moving = true if Input.is_action_pressed("ui_right") or Input.is_action_pressed("ui_left") else false
@@ -44,6 +48,7 @@ func movement():
 		physic_handler.keyboard_inputs()
 		state_machine.change_player_state(correct_anim)
 		physic_handler.snap = true if foot.is_colliding() else false
+
 
 func climb():
 	if Input.is_action_pressed("ui_accept") and main_node.is_on_floor():

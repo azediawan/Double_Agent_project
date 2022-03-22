@@ -99,6 +99,13 @@ scale = Vector2( 0.414605, 1.03251 )
 z_index = 4096
 shape = SubResource( 6 )
 
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="tiles/StaticBody2D"]
+position = Vector2( -662.736, -73.6094 )
+rotation = -2.9675
+scale = Vector2( 0.414605, 1.03251 )
+z_index = 4096
+shape = SubResource( 6 )
+
 [node name="Sprite1" type="Sprite" parent="tiles/StaticBody2D"]
 position = Vector2( 126.62, 44.9044 )
 scale = Vector2( 19.9589, 10.4592 )
@@ -169,6 +176,17 @@ frame = 7
 [node name="Sprite11" type="Sprite" parent="tiles/StaticBody2D"]
 position = Vector2( -514.971, -125.982 )
 rotation = 0.0144932
+scale = Vector2( 1.58778, 1.02573 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, 65.6213 )
+flip_h = true
+hframes = 7
+vframes = 2
+frame = 7
+
+[node name="Sprite12" type="Sprite" parent="tiles/StaticBody2D"]
+position = Vector2( -623.654, -134.299 )
+rotation = 0.17837
 scale = Vector2( 1.58778, 1.02573 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, 65.6213 )

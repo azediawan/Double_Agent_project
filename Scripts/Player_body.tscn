@@ -141,6 +141,7 @@ tracks/0/keys = {
 
 [sub_resource type="CapsuleShape2D" id=10]
 radius = 8.8302
+height = 16.9235
 
 [node name="Player_body" type="KinematicBody2D" groups=["Player"]]
 script = ExtResource( 3 )
@@ -178,6 +179,18 @@ vframes = 13
 [node name="CollisionArea" type="CollisionShape2D" parent="."]
 position = Vector2( 2.1767, -0.682293 )
 shape = SubResource( 10 )
+
+[node name="right_foot" type="RayCast2D" parent="."]
+position = Vector2( 7, 17.8 )
+scale = Vector2( 0.5, 0.5 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+
+[node name="left_foot" type="RayCast2D" parent="."]
+position = Vector2( -2, 17.8 )
+scale = Vector2( 0.5, 0.5 )
+enabled = true
+cast_to = Vector2( 0, 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

@@ -14,6 +14,7 @@ var is_landing = false
 var cur_animation = "none"
 var is_climbing = false
 var is_crouched = false
+var with_weapon = true
 
 
 func _process(_delta):
@@ -74,7 +75,10 @@ func idle_animation():
 	is_crouched = Input.is_action_pressed("ui_down")
 	var is_iddle = GlobalVariables.keyboard_vector > 0 or GlobalVariables.keyboard_vector < 0 and !Input.is_action_pressed("ui_up")
 	if is_iddle and !is_crouched and foot.is_colliding() and !is_landing:
-		play_animation("idle")
+		if !with_weapon:
+			play_animation("idle")
+		else:
+			play_animation("Idle_WG")
 		$AnimationPlayer.playback_speed = 0.4
 
 
@@ -85,11 +89,17 @@ func crouched_animation():
 func walking_animation():
 	anim_dir()
 	if !is_landing and foot.is_colliding() and GlobalVariables.move_and_slide.x != 0:
-		play_animation("Move")
+		if !with_weapon:
+			play_animation("Move")
+		else:
+			play_animation("walking_WG")
 
 
 func jump_animation():
-	play_animation("jump")
+	if !with_weapon:
+		play_animation("jump")
+	else:
+		play_animation("Jump_WG")
 	is_crouched = Input.is_action_pressed("ui_down")
 	is_jumping = true
 	yield(get_tree().create_timer(0.2), "timeout")
@@ -114,6 +124,7 @@ func can_fall():
 		return false
 	if global_player_y > 0 and !main_node.is_on_floor() and !is_landing:
 		is_falling = true
+		with_weapon = false
 		play_animation("falling")
 		return true
 
@@ -122,7 +133,10 @@ func can_land():
 	if !void_space.is_colliding() and is_jumping:
 		return false
 	if void_space.is_colliding() and !is_jumping:
-		play_animation("landing")
+		if !with_weapon:
+			play_animation("landing")
+		else:
+			play_animation("Landing_WG")
 		is_falling = false
 		is_landing = true
 		yield(get_tree().create_timer(0.22), "timeout")

@@ -18,6 +18,7 @@ func keyboard_actions():
 	crouched()
 	falling_or_landing()
 	climb()
+	arms_mode()
 
 
 func crouched():
@@ -54,3 +55,9 @@ func climb():
 	if Input.is_action_pressed("ui_accept") and main_node.is_on_floor():
 		state_machine.change_player_state("climb")
 		pass
+
+
+func arms_mode():
+	if Input.is_action_pressed("right_click"):
+		animationHandle.with_weapon = true
+		print("teste")

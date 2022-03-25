@@ -8,6 +8,12 @@ onready var main_node = get_parent().get_node(".")
 onready var left_foot = get_parent().get_node("left_foot")
 onready var right_foot = get_parent().get_node("right_foot")
 
+onready var temp_var = get_parent().get_node("Label2")
+onready var temp_var2 = get_parent().get_node("Label3")
+onready var temp_var3 = get_parent().get_node("Label4")
+onready var temp_var4 = get_parent().get_node("Label6")
+onready var temp_var5 = get_parent().get_node("Label5")
+
 var is_jumping = false
 var is_falling = false
 var is_landing = false
@@ -20,12 +26,37 @@ var with_weapon = true
 func _process(_delta):
 	$AnimationPlayer.playback_speed = 1
 	angle_rotation()
+	if void_space.is_colliding():
+		temp_var.text = str("void space ")
+
+	if foot.is_colliding():
+		temp_var2.text = str("foot ")
+	if left_foot.is_colliding():
+		temp_var3.text = "left foot is colliding"
+	if left_foot.is_colliding():
+		temp_var4.text = "right foot is colliding"
+	if main_node.is_on_floor():
+		temp_var5.text = "main node is colliding"
+	else:
+		temp_var3.text = "left foot is not colliding"
+		temp_var4.text = "right foot is not colliding"
+		temp_var.text = "no collision on void space"
+		temp_var2.text = "no foot collision"
+		temp_var5.text = "main node is not colliding"
 
 
 func play_animation(animation):
 	if cur_animation != animation:
 		$AnimationPlayer.play(animation)
 		cur_animation = animation
+
+
+func ground_check():
+	if void_space.is_colliding() and foot.is_colliding():
+		return true
+	else:
+		play_animation("idle")
+		return false
 
 
 func anim_dir():
@@ -74,7 +105,7 @@ func angle_rotation():
 func idle_animation():
 	is_crouched = Input.is_action_pressed("ui_down")
 	var is_iddle = GlobalVariables.keyboard_vector > 0 or GlobalVariables.keyboard_vector < 0 and !Input.is_action_pressed("ui_up")
-	if is_iddle and !is_crouched and foot.is_colliding() and !is_landing:
+	if is_iddle and !is_crouched and ground_check() and !is_landing:
 		if !with_weapon:
 			play_animation("idle")
 		else:
@@ -83,7 +114,12 @@ func idle_animation():
 
 
 func crouched_animation():
-	play_animation("crouched")
+	if !with_weapon:
+		play_animation("crouched")
+	else:
+		play_animation("crouching_WG")
+		# yield(get_tree().create_timer(0.2), "timeout")
+		# play_animation("crouched_WG")
 
 
 func walking_animation():

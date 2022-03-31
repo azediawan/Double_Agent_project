@@ -3,7 +3,7 @@ extends Node2D
 onready var anims_handle = get_parent().get_node("Anims_handle")
 onready var moviment_handle = get_parent().get_node("movement_handle")
 var player_state := 3
-onready var label = get_parent().get_node("Label")
+onready var label = get_parent().get_node("VBoxContainer/Label")
 enum { Walking, Jumping, Falling, Idle, Crouching, Landing, Climbing }
 var states = []
 
@@ -23,7 +23,7 @@ func change_player_state(value):
 		player_state = 6
 	else:
 		player_state = 3
-	label.text = value
+	label.text = str("state: ", value)
 
 
 # test values

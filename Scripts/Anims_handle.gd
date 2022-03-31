@@ -5,14 +5,16 @@ onready var foot = get_parent().get_node("foot_raycast")
 onready var state_machine = get_parent().get_node("StateM_handler")
 onready var void_space = get_parent().get_node("landing_space")
 onready var main_node = get_parent().get_node(".")
-onready var left_foot = get_parent().get_node("left_foot")
-onready var right_foot = get_parent().get_node("right_foot")
+onready var left_foot
+onready var right_foot
 
-onready var temp_var = get_parent().get_node("Label2")
-onready var temp_var2 = get_parent().get_node("Label3")
-onready var temp_var3 = get_parent().get_node("Label4")
-onready var temp_var4 = get_parent().get_node("Label6")
-onready var temp_var5 = get_parent().get_node("Label5")
+onready var temp_var = get_parent().get_node("VBoxContainer/Label2")
+onready var temp_var2 = get_parent().get_node("VBoxContainer/Label3")
+onready var temp_var3 = get_parent().get_node("VBoxContainer/Label4")
+onready var temp_var4 = get_parent().get_node("VBoxContainer/Label5")
+onready var temp_var5 = get_parent().get_node("VBoxContainer/Label6")
+onready var temp_var7 = get_parent().get_node("VBoxContainer/Label7")
+onready var temp_var8 = get_parent().get_node("VBoxContainer/Label8")
 
 var is_jumping = false
 var is_falling = false
@@ -24,25 +26,29 @@ var with_weapon = true
 
 
 func _process(_delta):
+	left_foot = main_node.left_colliding
+	right_foot = main_node.right_colliding
+# 	temp_var7.text = str(main_node.temp_area)
+	temp_var8.text = str("main node rotation: ", playerSprite.rotation_degrees)
 	$AnimationPlayer.playback_speed = 1
 	angle_rotation()
 	if void_space.is_colliding():
-		temp_var.text = str("void space ")
+		temp_var.text = str("void space: colliding")
 
 	if foot.is_colliding():
-		temp_var2.text = str("foot ")
-	if left_foot.is_colliding():
-		temp_var3.text = "left foot is colliding"
-	if left_foot.is_colliding():
-		temp_var4.text = "right foot is colliding"
+		temp_var2.text = str("foots: colliding ")
+	if left_foot:
+		temp_var3.text = "left foot: colliding"
+	if left_foot:
+		temp_var4.text = "right foot: colliding"
 	if main_node.is_on_floor():
-		temp_var5.text = "main node is colliding"
+		temp_var5.text = "main node collider: colliding"
 	else:
-		temp_var3.text = "left foot is not colliding"
-		temp_var4.text = "right foot is not colliding"
-		temp_var.text = "no collision on void space"
-		temp_var2.text = "no foot collision"
-		temp_var5.text = "main node is not colliding"
+		temp_var3.text = "left foot: not colliding"
+		temp_var4.text = "right foot: not colliding"
+		temp_var.text = "void space: not colliding"
+		temp_var2.text = "foots: not colliding"
+		temp_var5.text = "main node collider: not colliding"
 
 
 func play_animation(animation):
@@ -69,37 +75,16 @@ func anim_dir():
 
 
 func angle_rotation():
-	# var wich_foot = true if left_foot.is_colliding() else false
-	var left_is_colliding = left_foot.is_colliding()
-	var right_is_colliding = right_foot.is_colliding()
+	var angle_value = main_node.ground_rotation
+	var jumping_action = true if is_jumping and !is_falling else false
+	var falling_action = true if is_falling and !is_jumping else false
 
-	if foot.is_colliding() and left_is_colliding and right_is_colliding:
-		playerSprite.rotation_degrees = 0
-		collisionArea.rotation_degrees = 0
-		# return true
-	if !foot.is_colliding():
-		var jumping_action = true if is_jumping and !is_falling else false
-		var falling_action = true if is_falling and !is_jumping else false
-		var angle_value = 10 if jumping_action else -10
-		if falling_action or jumping_action:
-			playerSprite.rotation_degrees = angle_value * playerSprite.scale.x
-			collisionArea.rotation_degrees = angle_value * playerSprite.scale.x
-
-	# elif is_jumping and !is_falling and !foot.is_colliding():
-	# 	playerSprite.rotation_degrees = 10 * playerSprite.scale.x
-	# 	collisionArea.rotation_degrees = 10 * playerSprite.scale.x
-	# elif is_falling and !is_jumping and !foot.is_colliding():
-	# 	playerSprite.rotation_degrees = -10 * playerSprite.scale.x
-	# 	collisionArea.rotation_degrees = -10 * playerSprite.scale.x
-
-	elif !is_jumping and !is_landing and !is_falling:
-		if left_is_colliding and !right_is_colliding:
-			playerSprite.rotation_degrees = 15
-			collisionArea.rotation_degrees = 15
-
-		elif right_is_colliding and !left_is_colliding:
-			playerSprite.rotation_degrees = -15
-			collisionArea.rotation_degrees = -15
+	if !falling_action and !jumping_action:
+		playerSprite.rotation_degrees = angle_value
+	if jumping_action and !falling_action:
+		playerSprite.rotation_degrees = 10 * playerSprite.scale.x
+	if falling_action and !jumping_action:
+		playerSprite.rotation_degrees = -10 * playerSprite.scale.x
 
 
 func idle_animation():

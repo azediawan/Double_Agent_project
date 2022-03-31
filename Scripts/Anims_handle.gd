@@ -26,26 +26,26 @@ var with_weapon = true
 
 
 func _process(_delta):
-	left_foot = main_node.left_colliding
-	right_foot = main_node.right_colliding
+	left_foot = main_node.left_foot_colliding
+	right_foot = main_node.right_foot_colliding
 # 	temp_var7.text = str(main_node.temp_area)
 	temp_var8.text = str("main node rotation: ", playerSprite.rotation_degrees)
-	$AnimationPlayer.playback_speed = 1
+	delay_animation(1)
 	angle_rotation()
 	if void_space.is_colliding():
 		temp_var.text = str("void space: colliding")
 
 	if foot.is_colliding():
 		temp_var2.text = str("foots: colliding ")
-	if left_foot:
-		temp_var3.text = "left foot: colliding"
-	if left_foot:
-		temp_var4.text = "right foot: colliding"
+	# if left_foot:
+	# 	temp_var3.text = "left foot: colliding"
+	# if right_foot:
+	# 	temp_var4.text = "right foot: colliding"
 	if main_node.is_on_floor():
 		temp_var5.text = "main node collider: colliding"
 	else:
-		temp_var3.text = "left foot: not colliding"
-		temp_var4.text = "right foot: not colliding"
+		# temp_var3.text = "left foot: not colliding"
+		# temp_var4.text = "right foot: not colliding"
 		temp_var.text = "void space: not colliding"
 		temp_var2.text = "foots: not colliding"
 		temp_var5.text = "main node collider: not colliding"
@@ -55,6 +55,10 @@ func play_animation(animation):
 	if cur_animation != animation:
 		$AnimationPlayer.play(animation)
 		cur_animation = animation
+
+
+func delay_animation(time: float):
+	$AnimationPlayer.playback_speed = time
 
 
 func ground_check():
@@ -76,15 +80,23 @@ func anim_dir():
 
 func angle_rotation():
 	var angle_value = main_node.ground_rotation
+	var lerped_angle = lerp(0, angle_value, 0.4)
 	var jumping_action = true if is_jumping and !is_falling else false
 	var falling_action = true if is_falling and !is_jumping else false
+	var going_left = true if right_foot and playerSprite.scale.x == -1 else false
+	var going_right = true if left_foot and playerSprite.scale.x == 1 else false
+	var going_up = true if going_left or going_right else false
 
-	if !falling_action and !jumping_action:
-		playerSprite.rotation_degrees = angle_value
+	if angle_value >= 28 or angle_value <= -28 and going_up:
+		delay_animation(0.5)  #criar uma funcao responsavel por atrasar as animacoes ainda ta bem zoado, adicionar lentidao ao player na speed
+
+	if !falling_action and !jumping_action and foot.is_colliding():
+		playerSprite.rotation_degrees = lerped_angle
+
 	if jumping_action and !falling_action:
-		playerSprite.rotation_degrees = 10 * playerSprite.scale.x
+		playerSprite.rotation_degrees = lerp(0, 12 * playerSprite.scale.x, 0.6)
 	if falling_action and !jumping_action:
-		playerSprite.rotation_degrees = -10 * playerSprite.scale.x
+		playerSprite.rotation_degrees = lerp(0, -12 * playerSprite.scale.x, 0.6)
 
 
 func idle_animation():
@@ -95,7 +107,7 @@ func idle_animation():
 			play_animation("idle")
 		else:
 			play_animation("Idle_WG")
-		$AnimationPlayer.playback_speed = 0.4
+		delay_animation(0.4)
 
 
 func crouched_animation():
@@ -109,11 +121,14 @@ func crouched_animation():
 
 func walking_animation():
 	anim_dir()
-	if !is_landing and foot.is_colliding() and GlobalVariables.move_and_slide.x != 0:
+
+	if !is_landing and foot.is_colliding() and GlobalVariables.move_and_slide.x != 0 and GlobalVariables.keyboard_vector != 0:
 		if !with_weapon:
 			play_animation("Move")
 		else:
 			play_animation("walking_WG")
+	else:
+		idle_animation()
 
 
 func jump_animation():

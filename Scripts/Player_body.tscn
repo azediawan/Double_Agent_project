@@ -302,6 +302,20 @@ shape = SubResource( 10 )
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 
+[node name="left_cast" type="RayCast2D" parent="."]
+position = Vector2( 7, 15 )
+scale = Vector2( 0.5, 0.5 )
+enabled = true
+cast_to = Vector2( 0, 4 )
+collision_mask = 2
+
+[node name="right_cast" type="RayCast2D" parent="."]
+position = Vector2( -2.59595, 14.9338 )
+scale = Vector2( 0.5, 0.5 )
+enabled = true
+cast_to = Vector2( 0, 4 )
+collision_mask = 2
+
 [node name="landing_space" type="RayCast2D" parent="." groups=["player"]]
 position = Vector2( 2, 9 )
 scale = Vector2( 2.5, 1 )
@@ -368,13 +382,18 @@ margin_top = 126.0
 margin_right = 40.0
 margin_bottom = 140.0
 
+[node name="Label9" type="Label" parent="VBoxContainer"]
+margin_top = 144.0
+margin_right = 40.0
+margin_bottom = 158.0
+
 [node name="left_collider" type="Area2D" parent="."]
 position = Vector2( 9, 17 )
 collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="left_collider"]
-position = Vector2( -2.37938, 0.504682 )
+position = Vector2( -1.49736, -2.91974 )
 shape = SubResource( 21 )
 
 [node name="right_collider" type="Area2D" parent="."]
@@ -383,7 +402,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="right_collider"]
-position = Vector2( 13.4435, 31.3995 )
+position = Vector2( 12.3255, 28.1154 )
 shape = SubResource( 22 )
 
 [connection signal="body_entered" from="left_collider" to="." method="left_collider"]

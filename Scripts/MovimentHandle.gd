@@ -44,8 +44,10 @@ func falling_or_landing():
 
 func movement():
 	var correct_anim = "walk" if GlobalVariables.move_and_slide.x != 0 else "idle"
+	var two_arrows_press = true if Input.is_action_pressed("ui_right") and Input.is_action_pressed("ui_left") else false
+
 	var is_moving = true if Input.is_action_pressed("ui_right") or Input.is_action_pressed("ui_left") else false
-	if is_moving:
+	if is_moving and !two_arrows_press:
 		physic_handler.keyboard_inputs()
 		state_machine.change_player_state(correct_anim)
 		physic_handler.snap = true if foot.is_colliding() else false

@@ -5,17 +5,9 @@ onready var foot = get_parent().get_node("foot_raycast")
 onready var state_machine = get_parent().get_node("StateM_handler")
 onready var void_space = get_parent().get_node("landing_space")
 onready var main_node = get_parent().get_node(".")
+onready var physic_handler = get_parent().get_node("Physic_handler")
 onready var left_foot
 onready var right_foot
-
-onready var temp_var = get_parent().get_node("VBoxContainer/Label2")
-onready var temp_var2 = get_parent().get_node("VBoxContainer/Label3")
-onready var temp_var3 = get_parent().get_node("VBoxContainer/Label4")
-onready var temp_var4 = get_parent().get_node("VBoxContainer/Label5")
-onready var temp_var5 = get_parent().get_node("VBoxContainer/Label6")
-onready var temp_var7 = get_parent().get_node("VBoxContainer/Label7")
-onready var temp_var8 = get_parent().get_node("VBoxContainer/Label8")
-
 var is_jumping = false
 var is_falling = false
 var is_landing = false
@@ -26,29 +18,14 @@ var with_weapon = true
 
 
 func _process(_delta):
+	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label3, "main node rotation: ", playerSprite.rotation_degrees)
+	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label7, "void space colliding: ", bool(void_space.is_colliding()))
+	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label8, "foot colliding: ", bool(foot.is_colliding()))
+
 	left_foot = main_node.left_foot_colliding
 	right_foot = main_node.right_foot_colliding
-# 	temp_var7.text = str(main_node.temp_area)
-	temp_var8.text = str("main node rotation: ", playerSprite.rotation_degrees)
 	delay_animation(1)
 	angle_rotation()
-	if void_space.is_colliding():
-		temp_var.text = str("void space: colliding")
-
-	if foot.is_colliding():
-		temp_var2.text = str("foots: colliding ")
-	# if left_foot:
-	# 	temp_var3.text = "left foot: colliding"
-	# if right_foot:
-	# 	temp_var4.text = "right foot: colliding"
-	if main_node.is_on_floor():
-		temp_var5.text = "main node collider: colliding"
-	else:
-		# temp_var3.text = "left foot: not colliding"
-		# temp_var4.text = "right foot: not colliding"
-		temp_var.text = "void space: not colliding"
-		temp_var2.text = "foots: not colliding"
-		temp_var5.text = "main node collider: not colliding"
 
 
 func play_animation(animation):
@@ -79,16 +56,16 @@ func anim_dir():
 
 
 func angle_rotation():
-	var angle_value = main_node.ground_rotation
-	var lerped_angle = lerp(0, angle_value, 0.4)
+	var self_angle_value = main_node.ground_rotation
+	var lerped_angle = lerp(0, self_angle_value, 0.4)
 	var jumping_action = true if is_jumping and !is_falling else false
 	var falling_action = true if is_falling and !is_jumping else false
 	var going_left = true if right_foot and playerSprite.scale.x == -1 else false
 	var going_right = true if left_foot and playerSprite.scale.x == 1 else false
 	var going_up = true if going_left or going_right else false
 
-	if angle_value >= 28 or angle_value <= -28 and going_up:
-		delay_animation(0.5)  #criar uma funcao responsavel por atrasar as animacoes ainda ta bem zoado, adicionar lentidao ao player na speed
+	if self_angle_value >= 28 or self_angle_value <= -28 and going_up:
+		delay_animation(0.55)
 
 	if !falling_action and !jumping_action and foot.is_colliding():
 		playerSprite.rotation_degrees = lerped_angle
@@ -115,8 +92,6 @@ func crouched_animation():
 		play_animation("crouched")
 	else:
 		play_animation("crouching_WG")
-		# yield(get_tree().create_timer(0.2), "timeout")
-		# play_animation("crouched_WG")
 
 
 func walking_animation():

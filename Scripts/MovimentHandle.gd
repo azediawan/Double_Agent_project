@@ -62,4 +62,3 @@ func climb():
 func arms_mode():
 	if Input.is_action_pressed("right_click"):
 		animationHandle.with_weapon = true
-		print("teste")

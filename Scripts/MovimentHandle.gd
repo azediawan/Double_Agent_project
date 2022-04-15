@@ -19,12 +19,26 @@ func keyboard_actions():
 	falling_or_landing()
 	climb()
 	arms_mode()
+	no_move()
+
+
+func no_move():
+	if (
+		Input.is_action_just_released("ui_right")
+		or Input.is_action_just_released("ui_left")
+		or Input.is_action_pressed("ui_left") and Input.is_action_pressed("ui_right")
+	):
+		physic_handler.stop_player()
+		# return true
+	# else:
+	# return false
 
 
 func crouched():
 	if Input.is_action_pressed("ui_down") and main_node.is_on_floor():
-		state_machine.change_player_state("crouch")
-		physic_handler.keyboard_input.x = 0
+		if !physic_handler.edge_falling():
+			state_machine.change_player_state("crouch")
+			physic_handler.keyboard_input.x = 0
 
 
 func jump():

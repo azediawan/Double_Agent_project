@@ -18,19 +18,3 @@ func _process(_delta):
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label4, "floor rotation: ", ground_rotation)
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label5, "right foot is colliding: ", right_foot_colliding)
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label6, "left foot is colliding: ", left_foot_colliding)
-
-
-func left_collider(_body):
-	left_foot_colliding = true
-
-
-func right_collider(_body):
-	right_foot_colliding = true
-
-
-func left_collider_exit(_body) -> void:
-	left_foot_colliding = false
-
-
-func right_collider_exit(_body) -> void:
-	right_foot_colliding = false

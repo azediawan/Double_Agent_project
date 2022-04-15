@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Assets/Sprites/Player_sprites/Player_sprite.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/MovimentHandle.gd" type="Script" id=2]
@@ -247,12 +247,6 @@ tracks/0/keys = {
 radius = 8.8302
 height = 16.9235
 
-[sub_resource type="RectangleShape2D" id=21]
-extents = Vector2( 2.609, 2.77737 )
-
-[sub_resource type="RectangleShape2D" id=22]
-extents = Vector2( 2.80593, 2.67214 )
-
 [node name="Player_body" type="KinematicBody2D" groups=["player"]]
 position = Vector2( -5, 0 )
 collision_layer = 0
@@ -304,14 +298,14 @@ shape = SubResource( 10 )
 current = true
 
 [node name="left_cast" type="RayCast2D" parent="."]
-position = Vector2( 7, 15 )
+position = Vector2( -4.5, 15 )
 scale = Vector2( 0.5, 0.5 )
 enabled = true
 cast_to = Vector2( 0, 4 )
 collision_mask = 2
 
 [node name="right_cast" type="RayCast2D" parent="."]
-position = Vector2( -2.59595, 14.9338 )
+position = Vector2( 9, 15 )
 scale = Vector2( 0.5, 0.5 )
 enabled = true
 cast_to = Vector2( 0, 4 )
@@ -409,25 +403,4 @@ margin_top = 216.0
 margin_right = 40.0
 margin_bottom = 230.0
 
-[node name="left_collider" type="Area2D" parent="."]
-position = Vector2( 9, 17 )
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="left_collider"]
-position = Vector2( -1.49736, -2.91974 )
-shape = SubResource( 21 )
-
-[node name="right_collider" type="Area2D" parent="."]
-position = Vector2( -16, -14 )
-collision_layer = 2
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="right_collider"]
-position = Vector2( 12.3255, 28.1154 )
-shape = SubResource( 22 )
-
-[connection signal="body_entered" from="left_collider" to="." method="left_collider"]
-[connection signal="body_exited" from="left_collider" to="." method="left_collider_exit"]
-[connection signal="body_entered" from="right_collider" to="." method="right_collider"]
-[connection signal="body_exited" from="right_collider" to="." method="right_collider_exit"]
+[node name="timers" type="Node2D" parent="."]

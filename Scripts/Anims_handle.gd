@@ -15,12 +15,21 @@ var cur_animation = "none"
 var is_climbing = false
 var is_crouched = false
 var with_weapon = true
+var dangerous_fall = false
+
+
+# var edge_fall = false
+func _ready():
+	GlobalVariables.anims_handle_node = self
+	pass
 
 
 func _process(_delta):
+	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label10, "sa porra de edge fall", dangerous_fall)
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label3, "main node rotation: ", playerSprite.rotation_degrees)
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label7, "void space colliding: ", bool(void_space.is_colliding()))
 	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label8, "foot colliding: ", bool(foot.is_colliding()))
+	GlobalVariables.logger.show_in_game(GlobalVariables.logger.label9, "Main node colliding: ", main_node.is_on_floor())
 
 	left_foot = main_node.left_foot_colliding
 	right_foot = main_node.right_foot_colliding
@@ -57,23 +66,18 @@ func anim_dir():
 
 func angle_rotation():
 	var self_angle_value = main_node.ground_rotation
-	var lerped_angle = lerp(0, self_angle_value, 0.4)
+	var normalize_angle = lerp(0, self_angle_value, 0.4)
 	var jumping_action = true if is_jumping and !is_falling else false
 	var falling_action = true if is_falling and !is_jumping else false
-	var going_left = true if right_foot and playerSprite.scale.x == -1 else false
-	var going_right = true if left_foot and playerSprite.scale.x == 1 else false
-	var going_up = true if going_left or going_right else false
+	var on_air_value = 12 if jumping_action and !falling_action else -16
+	# var new_rotate_params = on_air_value if !no_safe_landing() else -55
+	playerSprite.rotation_degrees = on_air_value * playerSprite.scale.x
 
-	if self_angle_value >= 28 or self_angle_value <= -28 and going_up:
+	if physic_handler.hill_climb_exaustion():
 		delay_animation(0.55)
 
 	if !falling_action and !jumping_action and foot.is_colliding():
-		playerSprite.rotation_degrees = lerped_angle
-
-	if jumping_action and !falling_action:
-		playerSprite.rotation_degrees = lerp(0, 12 * playerSprite.scale.x, 0.6)
-	if falling_action and !jumping_action:
-		playerSprite.rotation_degrees = lerp(0, -12 * playerSprite.scale.x, 0.6)
+		playerSprite.rotation_degrees = normalize_angle
 
 
 func idle_animation():
@@ -144,12 +148,14 @@ func can_land():
 	if !void_space.is_colliding() and is_jumping:
 		return false
 	if void_space.is_colliding() and !is_jumping:
+		# physic_handler.edge_falling_push = 20000
 		if !with_weapon:
 			play_animation("landing")
 		else:
 			play_animation("Landing_WG")
 		is_falling = false
 		is_landing = true
+
 		yield(get_tree().create_timer(0.22), "timeout")
 		is_landing = false
 		return true
